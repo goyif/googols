@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.googol.han.depotinfo.dao.DepotInfoDao">
+
+	<resultMap type="DepotInfo" id="DepotInfoResult">
+		<result property="depotinfoId" column="depotinfoId" />
+		<result property="depotDate" column="depotDate" />
+		<result property="deptInfoExplain" column="deptInfoExplain" />
+		<result property="goodId" column="goodId" />
+		<result property="goodName" column="goodName" />
+		<result property="goodNumber" column="goodNumber" />
+		<result property="goodBidPrice" column="goodBidPrice" />
+		<result property="goodallPrice" column="goodallPrice" />
+	    <result property="depotName" column="depotName"/> 
+		<result property="userId" column="userId"/>
+		<result property="depotId" column="depotId"/> 
+		<result property="goodExplain" column="goodExplain"/>
+	</resultMap>
+		
+		<sql id="one">
+		#{goodId},
+		#{goodName},
+		#{goodBidPrice}
+		</sql>
+		
+		<sql id="ones">
+			goodId,goodName,goodBidPrice
+		</sql> 
+		
+	<select id="queryGoods" parameterType="DepotInfo" resultMap="DepotInfoResult">
+		select 
+		<include refid="ones"></include>
+		 from googol_depotinfo 
+		<where>
+               <if test="goodId != ''">
+                   goodId = #{goodId}
+               </if>
+            
+               <if test="goodName != null">
+                  AND goodName = #{goodName}
+               </if>
+               <if test="goodBidPrice != ''">
+                  AND goodBidPrice = #{goodBidPrice}
+               </if>
+             
+           </where>
+	</select>	
+	
+	<select id="depotInfoListPage" resultType="map" parameterType="string">
+
+			 <![CDATA[
+            ${value} 
+          ]]>
+          
+          
+	</select>
+		
+		
+	<select id="depotInfoQueall" resultMap="DepotInfoResult">
+		select * from googol_depotinfo
+	</select>
+	
+	<select id="depotInfoQueId" resultMap="DepotInfoResult" parameterType="String">
+		select depotinfoId=#{depotinfoId} from googol_depotinfo
+	</select>
+	
+	<insert id="depotInfoAdd" parameterType="com.googol.han.depotinfo.entity.DepotInfo">
+		 insert into googol_depotinfo(depotinfoId,depotDate,deptInfoExplain,goodId,goodName,goodNumber,goodBidPrice,goodallPrice,depotName,userId,depotId,goodExplain) values(#{depotinfoId,jdbcType=VARCHAR},#{depotDate,jdbcType=VARCHAR},#{deptInfoExplain,jdbcType=VARCHAR},#{goodId,jdbcType=VARCHAR},#{goodName,jdbcType=VARCHAR},#{goodNumber,jdbcType=VARCHAR},#{goodBidPrice,jdbcType=VARCHAR},#{goodallPrice,jdbcType=VARCHAR},#{depotName,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR},#{depotId,jdbcType=VARCHAR},#{goodExplain,jdbcType=VARCHAR})
+
+	</insert>
+	
+	<delete id="depotInfoDel" parameterType="DepotInfo">
+		delete from googol_depotinfo where depotinfoId=#{depotinfoId}
+	</delete>
+
+	<update id="depotInfoUpd" parameterType="DepotInfo">
+	update googol_depotinfo 
+	<set>
+          <if test="depotDate != null">depotDate = #{depotDate},</if> 
+          <if test="deptInfoExplain != null">deptInfoExplain = #{deptInfoExplain},</if> 
+          <if test="goodId != null">goodId = #{goodId},</if>
+          <if test="goodName != null">goodName = #{goodName},</if>
+          <if test="goodNumber != null">goodNumber = #{goodNumber},</if>
+          <if test="goodBidPrice != null">goodBidPrice = #{goodBidPrice},</if>
+          <if test="goodallPrice != null">goodallPrice = #{goodallPrice},</if>  
+        </set>
+           <where>
+               <if test="depotinfoId != null">
+                   depotinfoId = #{depotinfoId}
+               </if>
+               
+           </where>
+	</update>
+	<select id="finmaxid"  resultType="Integer">
+	select max(depotinfoId) from googol_depotinfo
+	</select>
+	
+	<select id="depotInfoQuery" parameterType="String" resultMap="DepotInfoResult">
+      select * from googol_depotinfo  where goodId = #{goodId},goodName = #{goodName} like '%${temp}%'  
+   </select>
+   
+   <select id="depotInfoQueById" resultMap="DepotInfoResult" parameterType="String">
+		select * from googol_depotinfo
+		<where>
+			depotinfoId=#{depotinfoId}
+		</where>
+	</select>
+</mapper> 
